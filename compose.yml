@@ -1,0 +1,41 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - promptology-network
+
+  frontend:
+    build:
+      context: ./creative-prompts
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_PROMPTOLOGY_URL=http://backend:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - promptology-network
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama-data:/root/.ollama
+    command: serve
+    networks:
+      - promptology-network
+    ports:
+      - "11434:11434"
+
+volumes:
+  ollama-data:
+
+networks:
+  promptology-network:
+    driver: bridge

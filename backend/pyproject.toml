@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "promptology"
+version = "0.1.0"
+description = "Backend for CreAItive Prompting"
+authors = ["Camilo Velez <camilov61@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = {extras = ["standard"], version = "^0.115.11"}
+openai = "^1.65.4"
+typer = {extras = ["all"], version = "^0.12.3"}
+
+[tool.poetry.scripts]
+promptology = "promptology.cli.main:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
