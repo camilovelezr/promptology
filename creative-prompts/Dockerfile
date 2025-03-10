@@ -13,6 +13,10 @@ RUN npm ci
 # Copy the rest of the application
 COPY . .
 
+# Accept build arguments for Next.js public environment variables
+ARG NEXT_PUBLIC_PROMPTOLOGY_URL
+ENV NEXT_PUBLIC_PROMPTOLOGY_URL=${NEXT_PUBLIC_PROMPTOLOGY_URL}
+
 # Build the application
 RUN npm run build
 

@@ -13,10 +13,12 @@ services:
     build:
       context: ./creative-prompts
       dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_BACKEND_URL=http://backend:8000
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_PROMPTOLOGY_URL=http://backend:8000
+      - BACKEND_URL=http://backend:8000
     depends_on:
       - backend
     restart: unless-stopped

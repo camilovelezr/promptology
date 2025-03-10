@@ -32,6 +32,17 @@ Promptology consists of these main components:
   - **Ollama** (included): Local LLM service running in Docker
   - **LiteLLM** (external): Your own LiteLLM deployment
 
+### System Architecture
+
+The application uses a secure container-to-container communication pattern:
+
+1. The **Next.js frontend** is exposed on port 3000 for browser access
+2. The **FastAPI backend** is not directly exposed - it's only accessible within the Docker network
+3. API requests from the browser are sent to Next.js API routes
+4. These API routes proxy the requests to the backend over the secure Docker network
+
+This architecture improves security by reducing exposed services while maintaining full functionality.
+
 ## 🛠️ Setup & Configuration
 
 ### Prerequisites
@@ -113,13 +124,13 @@ If you have your own LiteLLM deployment and want to use it instead of Ollama:
 | `LITELLM_API_KEY` | No | - | API key for LiteLLM if required |
 | `OLLAMA_URL` | No | `http://ollama:11434/v1` | URL for Ollama API (used only if LITELLM_URL is not set) |
 | `OLLAMA_API_KEY` | No | `ollama` | API key for Ollama if required |
-| `NEXT_PUBLIC_PROMPTOLOGY_URL` | Yes (in frontend) | `http://backend:8000` | URL for backend API (set in Docker Compose) |
+| `BACKEND_URL` | Yes (in frontend) | `http://backend:8000` | Internal URL for backend API (not exposed to browser) |
 
 **Important Notes:**
 - If both `LITELLM_URL` and `OLLAMA_URL` are set, `LITELLM_URL` takes precedence
 - At least one of `LITELLM_URL` or `OLLAMA_URL` must be set
 - When using Ollama, you must pull your model after starting services
-- The frontend will automatically connect to the backend via the Docker network
+- The application uses a secure Docker network for internal communication
 
 ## 🔍 Usage
 
@@ -132,9 +143,9 @@ If you have your own LiteLLM deployment and want to use it instead of Ollama:
 
 | Service | Port | Description |
 |---------|------|-------------|
-| Frontend | 3000 | Next.js web interface |
-| Backend | 8000 | FastAPI server |
-| Ollama | 11434 | LLM API server (only if using Ollama) |
+| Frontend | 3000 | Next.js web interface (exposed) |
+| Backend | - | FastAPI server (internal only) |
+| Ollama | 11434 | LLM API server (optional, internal by default) |
 
 ## 🛠️ Troubleshooting
 
@@ -142,8 +153,8 @@ If you have your own LiteLLM deployment and want to use it instead of Ollama:
 - **Connection refused**: Ensure all services are running with `docker compose ps`
 - **Backend not responding**: Check logs with `docker compose logs backend`
 - **Frontend not loading**: Check logs with `docker compose logs frontend`
+- **API errors**: Check browser console and Next.js API route logs in `docker compose logs frontend`
 
 ## 📦 Development
 
 See individual README files in `backend/` and `creative-prompts/` directories for development-specific instructions.
-

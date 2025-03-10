@@ -2,8 +2,7 @@
  * API service for communicating with the Promptology backend
  */
 
-// Get the API URL from environment variables, with a fallback
-const API_URL = process.env.NEXT_PUBLIC_PROMPTOLOGY_URL || 'http://localhost:8000';
+// No need for API_URL as we're using Next.js API routes now
 
 /**
  * Generate a prompt based on a user query
@@ -13,7 +12,7 @@ const API_URL = process.env.NEXT_PUBLIC_PROMPTOLOGY_URL || 'http://localhost:800
  */
 export async function generatePrompt(query: string): Promise<string> {
     try {
-        const response = await fetch(`${API_URL}/generate-prompt`, {
+        const response = await fetch('/api/generate-prompt', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -23,7 +22,7 @@ export async function generatePrompt(query: string): Promise<string> {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.detail || 'Failed to generate prompt');
+            throw new Error(errorData.error || 'Failed to generate prompt');
         }
 
         const data = await response.json();
@@ -48,7 +47,7 @@ export async function refinePrompt(
     feedback: string
 ): Promise<string> {
     try {
-        const response = await fetch(`${API_URL}/reprompt`, {
+        const response = await fetch('/api/reprompt', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,7 +61,7 @@ export async function refinePrompt(
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.detail || 'Failed to refine prompt');
+            throw new Error(errorData.error || 'Failed to refine prompt');
         }
 
         const data = await response.json();
