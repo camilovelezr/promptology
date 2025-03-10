@@ -44,7 +44,7 @@ Promptology consists of these main components:
 
 #### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/yourusername/promptology.git
+git clone https://github.com/camilovelezr/promptology.git
 cd promptology
 ```
 
